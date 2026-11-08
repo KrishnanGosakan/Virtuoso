@@ -23,8 +23,32 @@ struct MimicOSMessage {
     }
     
     // Disable copy
-    MimicOSMessage(const MimicOSMessage&) = delete;
-    MimicOSMessage& operator=(const MimicOSMessage&) = delete;
+    //MimicOSMessage(const MimicOSMessage&) = delete;
+    //MimicOSMessage& operator=(const MimicOSMessage&) = delete;
+        // Safely enable Deep Copying for C++17 STL containers
+    MimicOSMessage(const MimicOSMessage& other) : argc(other.argc), argv(nullptr) {
+        if (other.argv && other.argc > 0) {
+            argv = static_cast<uint64_t*>(malloc(sizeof(uint64_t) * other.argc));
+            for (int i = 0; i < other.argc; ++i) {
+                argv[i] = other.argv[i];
+            }
+        }
+    }
+    
+    MimicOSMessage& operator=(const MimicOSMessage& other) {
+        if (this != &other) {
+            clear();
+            argc = other.argc;
+            if (other.argv && other.argc > 0) {
+                argv = static_cast<uint64_t*>(malloc(sizeof(uint64_t) * other.argc));
+                for (int i = 0; i < other.argc; ++i) {
+                    argv[i] = other.argv[i];
+                }
+            }
+        }
+        return *this;
+    }
+
     
     // Allow move
     MimicOSMessage(MimicOSMessage&& other) noexcept 

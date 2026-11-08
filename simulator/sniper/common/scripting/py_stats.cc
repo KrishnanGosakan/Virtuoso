@@ -49,13 +49,36 @@ statsGetterGet(PyObject *self, PyObject *args, PyObject *kw)
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-static PyTypeObject statsGetterType = {
+/*static PyTypeObject statsGetterType = {
    .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
    .tp_name = "statsGetter",
    .tp_basicsize = sizeof(statsGetterObject),
    .tp_call = statsGetterGet,
    .tp_flags = Py_TPFLAGS_DEFAULT,
    .tp_doc = PyDoc_STR("Stats getter objects"),
+};*/
+static PyTypeObject statsGetterType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "statsGetter",                           /* tp_name */
+    sizeof(statsGetterObject),               /* tp_basicsize */
+    0,                                       /* tp_itemsize */
+    0,                                       /* tp_dealloc */
+    0,                                       /* tp_vectorcall_offset */
+    0,                                       /* tp_getattr */
+    0,                                       /* tp_setattr */
+    0,                                       /* tp_as_async */
+    0,                                       /* tp_repr */
+    0,                                       /* tp_as_number */
+    0,                                       /* tp_as_sequence */
+    0,                                       /* tp_as_mapping */
+    0,                                       /* tp_hash */
+    statsGetterGet,                          /* tp_call */
+    0,                                       /* tp_str */
+    0,                                       /* tp_getattro */
+    0,                                       /* tp_setattro */
+    0,                                       /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,                      /* tp_flags */
+    PyDoc_STR("Stats getter objects"),       /* tp_doc */
 };
 #pragma GCC diagnostic pop
 
