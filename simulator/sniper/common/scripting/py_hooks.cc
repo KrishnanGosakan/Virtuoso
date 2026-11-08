@@ -32,10 +32,11 @@ static void check_and_abort(){
 		
 		// If we're still in ROI, make sure we end it properly
 		Sim()->getMagicServer()->setPerformance(false);
+		Sim()->release();
 		
 		// Record final statistics to the SQLite database
-		Sim()->getStatsManager()->recordStats("stop");
-		Sim()->getHooksManager()->callHooks(HookType::HOOK_SIM_END, 0);
+		//Sim()->getStatsManager()->recordStats("stop");
+		//Sim()->getHooksManager()->callHooks(HookType::HOOK_SIM_END, 0);
 		
 		LOG_PRINT("Application exit.");
 		
