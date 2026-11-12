@@ -7,7 +7,7 @@
 #include "core.h"
 #include "shmem_perf_model.h"
 #include "pagetable.h"
-#include "tlb_subsystem.h"
+#include "elastic_tlb_subsystem.h"
 #include "mmu_base.h"
 #include "metadata_table_base.h"
 #include "ptmshrs.h"
@@ -19,7 +19,7 @@
 namespace ParametricDramDirectoryMSI
 {
 	
-	class TLBHierarchy;
+	class ElasticTLBHierarchy;
 
 	class MemoryManagementUnitElastic : public MemoryManagementUnitBase
 	{
@@ -30,7 +30,7 @@ namespace ParametricDramDirectoryMSI
 		MemoryManagerBase *memory_manager;
 
 		// The TLB hierarchy for this MMU - gets instantiated in instantiateTLBSubsystem()
-		TLBHierarchy *tlb_subsystem;
+		ElasticTLBHierarchy *tlb_subsystem;
 
 		// The metadata table for this MMU - gets instantiated in instantiateMetadataTable()
 		// This is useful for ARM-type architectures with tagged memory support

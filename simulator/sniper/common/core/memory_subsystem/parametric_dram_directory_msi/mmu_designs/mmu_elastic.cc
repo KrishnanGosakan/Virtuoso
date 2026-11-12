@@ -243,7 +243,7 @@ namespace ParametricDramDirectoryMSI
      */
     void MemoryManagementUnitElastic::instantiateTLBSubsystem()
     {
-        tlb_subsystem = new TLBHierarchy(name, core, memory_manager, shmem_perf_model);
+        tlb_subsystem = new ElasticTLBHierarchy(name, core, memory_manager, shmem_perf_model);
 
         // Page Size Prediction configuration
         page_size_prediction_enabled = Sim()->getCfg()->getBool("perf_model/" + name + "/page_size_prediction_enabled");
@@ -451,7 +451,7 @@ namespace ParametricDramDirectoryMSI
 
             // Charge L1 dTLB latency (1-cycle hit) to model realistic lookup cost
             SubsecondTime l1_dtlb_latency = SubsecondTime::Zero();
-            const TLBSubsystem& tlbs = tlb_subsystem->getTLBSubsystem();
+            const ElasticTLBSubsystem& tlbs = tlb_subsystem->getTLBSubsystem();
             if (!tlbs.empty()) {
                 for (UInt32 j = 0; j < tlbs[0].size(); j++) {
                     // Find the L1 dTLB (Data or Unified, not Instruction-only)
@@ -529,7 +529,7 @@ namespace ParametricDramDirectoryMSI
         PageTable *page_table = Sim()->getMimicOS()->getPageTable(app_id);
 
         // Get reference to TLB hierarchy (const ref avoids expensive vector copy)
-        const TLBSubsystem& tlbs = tlb_subsystem->getTLBSubsystem();
+        const ElasticTLBSubsystem& tlbs = tlb_subsystem->getTLBSubsystem();
 
         // ====================================================================
         // PHASE 1: TLB Hierarchy Lookup
@@ -544,7 +544,7 @@ namespace ParametricDramDirectoryMSI
         // For data accesses, only dTLB and unified TLBs are searched.
 
         bool hit = false;                        // Did we find a cached translation?
-        TLB *hit_tlb = NULL;                     // Which TLB had the hit?
+        ElasticTLB *hit_tlb = NULL;                     // Which TLB had the hit?
         CacheBlockInfo *tlb_block_info_hit = NULL;  // Block info from hitting TLB
         CacheBlockInfo *tlb_block_info = NULL;      // Temporary for lookup results
         int hit_level = -1;                      // Level where hit occurred (-1 = miss)
@@ -686,7 +686,7 @@ namespace ParametricDramDirectoryMSI
             }
             
             // Get the appropriate TLB path (instruction or data) for latency
-            const TLBSubsystem& tlb_path = instruction ? 
+            const ElasticTLBSubsystem& tlb_path = instruction ? 
                 tlb_subsystem->getInstructionPath() : tlb_subsystem->getDataPath();
 
             // Allocate array for per-level latencies
@@ -962,11 +962,11 @@ namespace ParametricDramDirectoryMSI
             // traffic.  No-op unless model_payload_writeback is enabled.
             if (!caused_page_fault)
             {
-                const TLBSubsystem& tlbs_wb = tlb_subsystem->getTLBSubsystem();
+                const ElasticTLBSubsystem& tlbs_wb = tlb_subsystem->getTLBSubsystem();
                 for (UInt32 wi = 0; wi < tlbs_wb.size(); wi++)
                     for (UInt32 wj = 0; wj < tlbs_wb[wi].size(); wj++)
                     {
-                        TLB *t = tlbs_wb[wi][wj];
+                        ElasticTLB *t = tlbs_wb[wi][wj];
                         if (!t->getPrefetch())
                             continue;
                         TLBPrefetcherBase **pfs = t->getPrefetchers();
@@ -1063,7 +1063,7 @@ namespace ParametricDramDirectoryMSI
         //          another eviction at L2 which is just dropped.
 
         // Get the appropriate TLB path for allocation (instruction or data)
-        const TLBSubsystem& alloc_tlbs = instruction ? 
+        const ElasticTLBSubsystem& alloc_tlbs = instruction ? 
             tlb_subsystem->getInstructionPath() : tlb_subsystem->getDataPath();
 
         // Track evicted translations for cascade allocation to higher levels
