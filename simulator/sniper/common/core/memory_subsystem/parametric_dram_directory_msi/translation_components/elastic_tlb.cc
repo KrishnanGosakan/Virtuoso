@@ -72,7 +72,8 @@ namespace ParametricDramDirectoryMSI
                   << " Allocate on miss: " << (m_allocate_miss ? "true" : "false") << " "
                   << " Number of prefetchers: " << number_of_prefetchers << " "
                   << " Access latency: " << m_access_latency.getLatency().getNS() << "ns "
-                  << " Page sizes: " << m_page_sizes << std::endl;
+                  << " Page sizes: " << m_page_sizes << ""
+                  << " Elastic: " << m_isElastic << std::endl;
 
         m_page_size_list = std::unique_ptr<int[]>(new int[m_page_sizes]);
 
